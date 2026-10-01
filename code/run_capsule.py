@@ -640,12 +640,13 @@ def run() -> None:
                             # the workaround is to discard the last samples to make it "even"
                             if recording.get_num_segments() == 1:
                                                             # added conversion here
-                                logging.info(
-                                    f"Recording LFP has unsigned integer dtype {recording_lfp.get_dtype()}. "
-                                    "Converting to signed integer."
-                                )
-                                recording_lfp = spre.unsigned_to_signed(recording_lfp)
-
+                                if recording_lfp.get_dtype().kind == "u":
+                                    logging.info(
+                                        f"Recording LFP has unsigned integer dtype {recording_lfp.get_dtype()}. "
+                                        "Converting to signed integer."
+                                    )
+                                    recording_lfp = spre.unsigned_to_signed(recording_lfp)
+                                    
                                 recording_lfp = recording_lfp.frame_slice(
                                     start_frame=0,
                                     end_frame=int(
