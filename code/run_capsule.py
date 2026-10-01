@@ -138,7 +138,6 @@ def run() -> None:
                     nwb_ecephys_params = json.load(f)
             else:
                 raise ValueError(f"Invalid parameters: {PARAMS} is not a valid JSON string or file path")
-
         NWB_BACKEND = nwb_ecephys_params.get("backend", "zarr")
         STUB_TEST = nwb_ecephys_params.get("stub", False)
         STUB_SECONDS = float(nwb_ecephys_params.get("stub_seconds", 10))
@@ -625,6 +624,14 @@ def run() -> None:
                             logging.info(
                                 f"\tAdding LFP data for stream {stream_name} from wide-band signal - segment {segment_index}"
                             )
+                            
+                            if recording_lfp.get_dtype().kind == "u":
+                                logging.info(
+                                    f"Recording LFP has unsigned integer dtype {recording_lfp.get_dtype()}. "
+                                    "Converting to signed integer."
+                                )
+                                recording_lfp = spre.unsigned_to_signed(recording_lfp)
+                                
                             recording_lfp = spre.bandpass_filter(recording, **lfp_filter_kwargs)
                             recording_lfp = spre.resample(recording_lfp, lfp_sampling_rate)
                             recording_lfp = spre.astype(recording_lfp, dtype="int16")
