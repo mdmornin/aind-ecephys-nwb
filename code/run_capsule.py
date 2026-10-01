@@ -624,14 +624,7 @@ def run() -> None:
                             logging.info(
                                 f"\tAdding LFP data for stream {stream_name} from wide-band signal - segment {segment_index}"
                             )
-                            # added conversion here
-                            if recording_lfp.get_dtype().kind == "u":
-                                logging.info(
-                                    f"Recording LFP has unsigned integer dtype {recording_lfp.get_dtype()}. "
-                                    "Converting to signed integer."
-                                )
-                                recording_lfp = spre.unsigned_to_signed(recording_lfp)
-                                
+
                             recording_lfp = spre.bandpass_filter(recording, **lfp_filter_kwargs)
                             recording_lfp = spre.resample(recording_lfp, lfp_sampling_rate)
                             recording_lfp = spre.astype(recording_lfp, dtype="int16")
@@ -639,14 +632,7 @@ def run() -> None:
                             # there is a bug in with sample mismatches for the last chunk if num_samples not divisible by chunk_size
                             # the workaround is to discard the last samples to make it "even"
                             if recording.get_num_segments() == 1:
-                                                            # added conversion here
-                                if recording_lfp.get_dtype().kind == "u":
-                                    logging.info(
-                                        f"Recording LFP has unsigned integer dtype {recording_lfp.get_dtype()}. "
-                                        "Converting to signed integer."
-                                    )
-                                    recording_lfp = spre.unsigned_to_signed(recording_lfp)
-                                    
+   
                                 recording_lfp = recording_lfp.frame_slice(
                                     start_frame=0,
                                     end_frame=int(
