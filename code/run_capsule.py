@@ -624,7 +624,7 @@ def run() -> None:
                             logging.info(
                                 f"\tAdding LFP data for stream {stream_name} from wide-band signal - segment {segment_index}"
                             )
-                            
+                            # added conversion here
                             if recording_lfp.get_dtype().kind == "u":
                                 logging.info(
                                     f"Recording LFP has unsigned integer dtype {recording_lfp.get_dtype()}. "
