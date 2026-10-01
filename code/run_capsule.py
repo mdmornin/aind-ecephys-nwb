@@ -484,9 +484,11 @@ def run() -> None:
                     else:
                         logging.info(f"\tAdding probe information from recording metadata")
                         probegroup = recording.get_probegroup()
-                        assert len(probegroup.probes) == 1, (
-                            "Grouping failed for this session. Each stream should be associated with a single probe!"
-                        )
+                        if len(probegroup.probes) > 1:
+                            logging.warning(
+                                f"\tStream {stream_name} has {len(probegroup.probes)} probes; "
+                                "using the first one for device metadata"
+                            )
                         probe = probegroup.probes[0]
                         electrode_group_location = "unknown"
 
