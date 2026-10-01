@@ -645,6 +645,8 @@ def run() -> None:
                                         f"Recording LFP has unsigned integer dtype {recording_lfp.get_dtype()}. "
                                         "Converting to signed integer."
                                     )
+                                    recording_lfp = spre.unsigned_to_signed(recording_lfp)
+
                                 recording_lfp = recording_lfp.frame_slice(
                                     start_frame=0,
                                     end_frame=int(
