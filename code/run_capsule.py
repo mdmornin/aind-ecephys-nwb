@@ -24,11 +24,15 @@ from neuroconv.tools.nwb_helpers import (
     configure_backend,
     get_default_backend_configuration,
 )
-from neuroconv.tools.spikeinterface.spikeinterface import (
-    add_recording_to_nwbfile,
-    add_recording_metadata_to_nwbfile
-)
-
+from neuroconv.tools.spikeinterface.spikeinterface import add_recording_to_nwbfile
+try:
+    from neuroconv.tools.spikeinterface.spikeinterface import add_recording_metadata_to_nwbfile
+except ImportError:  # neuroconv < 0.7.3
+    def add_recording_metadata_to_nwbfile(recording, nwbfile, metadata=None):
+        add_recording_to_nwbfile(
+            recording=recording, nwbfile=nwbfile, metadata=metadata,
+            write_electrical_series=False,
+        )
 from pynwb import NWBHDF5IO, NWBFile
 from pynwb.file import Device
 from hdmf_zarr import NWBZarrIO
